@@ -1,0 +1,49 @@
+<style>
+  .color-table {
+    width: 300px;
+    height: 300px;
+  }
+
+  .color-table-row {
+    width: 300px;
+    max-width: 300px;
+    height: 50px;
+    max-height: 50px;
+  }
+
+  .color-table-cell {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+  }
+
+  .red {
+    background-color: red;
+  }
+
+  .green {
+    background-color: green;
+  }
+
+  .blue {
+    background-color: blue;
+  }
+
+  .purple {
+    background-color: purple;
+  }
+
+  .yellow {
+    background-color: yellow;
+  }
+
+  .saddlebrown {
+    background-color: saddlebrown;
+  }
+
+</style>
+<div class="color-table">
+  <div class="color-table-row" *ngFor="let row of colorTable">
+    <div class="color-table-cell" [class]="'color-table-cell ' + cell" *ngFor="let cell of row"></div>
+  </div>
+</div>
