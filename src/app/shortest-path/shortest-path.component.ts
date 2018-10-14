@@ -125,7 +125,7 @@ export class ShortestPathComponent implements OnInit {
    * generate path
    * @param cityMaps
    */
-  generateGenome(citiesMaps: City[]): City[] {
+  generateChromosome(citiesMaps: City[]): City[] {
       var currentIndex = citiesMaps.length, temporaryValue, randomIndex;
 
       // While there remain elements to shuffle...
@@ -143,15 +143,15 @@ export class ShortestPathComponent implements OnInit {
 
       return citiesMaps;
 
-      // const genome = [];
+      // const Chromosome = [];
       // let index = 0;
       // for (let i = 0; i < citiesMaps.length; i++) {
       //     do {
       //         index = this.getRandomNumber(citiesMaps.length - 1);
-      //     } while (genome.findIndex(x => x.name === citiesMaps[index].name) >= 0);
-      //     genome.push(citiesMaps[index]);
+      //     } while (Chromosome.findIndex(x => x.name === citiesMaps[index].name) >= 0);
+      //     Chromosome.push(citiesMaps[index]);
       // }
-      // return genome;
+      // return Chromosome;
   }
   /**
    * generate new Popluation
@@ -160,7 +160,7 @@ export class ShortestPathComponent implements OnInit {
   generatePopulation(citiesMaps: City[]): City[][] {
       const population: City[][] = [];
       for (let index = 0; index < this.populationSize; index++) {
-          population.push(this.generateGenome(citiesMaps));
+          population.push(this.generateChromosome(citiesMaps));
       }
       return population;
   }
@@ -169,25 +169,25 @@ export class ShortestPathComponent implements OnInit {
   //#region Evaluation
   /**
    *
-   * @param genome
+   * @param Chromosome
    */
-  getGenomeScore(genome: City[]): number {
-      return 1 / this.getPathDistance(genome);
+  getChromosomeScore(Chromosome: City[]): number {
+      return 1 / this.getPathDistance(Chromosome);
   }
   /**
    *
    * @param population
    */
-  getFittestGenome(population: City[][]): City[] {
+  getFittestChromosome(population: City[][]): City[] {
       let fittestIndex = 0;
       let fittest = 0;
       for (let i = 0; i < population.length; i++) {
-          const genomeFitness = this.getGenomeScore(population[i]);
+          const ChromosomeFitness = this.getChromosomeScore(population[i]);
           if (fittest === 0) {
-              fittest = genomeFitness;
+              fittest = ChromosomeFitness;
               fittestIndex = i;
-          } else if (genomeFitness < fittest) {
-              fittest = genomeFitness;
+          } else if (ChromosomeFitness < fittest) {
+              fittest = ChromosomeFitness;
               fittestIndex = i;
           }
       }
@@ -197,16 +197,16 @@ export class ShortestPathComponent implements OnInit {
 
   //#region selection
   selectBestN(population: City[][], selectionNumber: number, errorThreshold: number): City[][] {
-      let fittestGenome = this.getFittestGenome(population);
-      let fittest = this.getGenomeScore(fittestGenome);
+      let fittestChromosome = this.getFittestChromosome(population);
+      let fittest = this.getChromosomeScore(fittestChromosome);
       let bestN: City[][] = [];
       let count = 0;
       while (count < selectionNumber) {
-          population.forEach((genome) => {
-              let genomeScore = this.getGenomeScore(genome);
-              if (genomeScore >= fittest - errorThreshold && genomeScore <= fittest + errorThreshold) {
+          population.forEach((Chromosome) => {
+              let ChromosomeScore = this.getChromosomeScore(Chromosome);
+              if (ChromosomeScore >= fittest - errorThreshold && ChromosomeScore <= fittest + errorThreshold) {
                   if (count < selectionNumber) {
-                      bestN.push(genome);
+                      bestN.push(Chromosome);
                       count++;
                   }
               }
@@ -236,8 +236,8 @@ export class ShortestPathComponent implements OnInit {
   }
 
   // need inhancment
-  makeChildren(genomeXY: City[], genomeXX: City[], makeTwo = false): City[][] {
-      let childrens = this.mateGenomes(genomeXY, genomeXX);
+  makeChildren(ChromosomeXY: City[], ChromosomeXX: City[], makeTwo = false): City[][] {
+      let childrens = this.mateChromosomes(ChromosomeXY, ChromosomeXX);
       let selectedChildrens = [];
       let firstIndex = this.getRandomNumber(this.citiesMap.length - 1);
       selectedChildrens.push(childrens[firstIndex]);
@@ -250,35 +250,35 @@ export class ShortestPathComponent implements OnInit {
       }
       return childrens;
   }
-  mateGenomes(genomeXY: City[], genomeXX: City[]): City[][] {
-      let parentGenomeMidIndex = genomeXY.length / 2;
-      let lastIndex = genomeXY.length - 1;
-      let genomeXYFirstHalf = genomeXY.slice(0, parentGenomeMidIndex);
-      let genomeXYSecondHalf = genomeXY.slice(parentGenomeMidIndex, lastIndex);
-      let genomeXXFirstHalf = genomeXX.slice(0, parentGenomeMidIndex);
-      let genomeXXSecondHalf = genomeXX.slice(parentGenomeMidIndex, lastIndex);
+  mateChromosomes(ChromosomeXY: City[], ChromosomeXX: City[]): City[][] {
+      let parentChromosomeMidIndex = ChromosomeXY.length / 2;
+      let lastIndex = ChromosomeXY.length - 1;
+      let ChromosomeXYFirstHalf = ChromosomeXY.slice(0, parentChromosomeMidIndex);
+      let ChromosomeXYSecondHalf = ChromosomeXY.slice(parentChromosomeMidIndex, lastIndex);
+      let ChromosomeXXFirstHalf = ChromosomeXX.slice(0, parentChromosomeMidIndex);
+      let ChromosomeXXSecondHalf = ChromosomeXX.slice(parentChromosomeMidIndex, lastIndex);
       let childrens = [];
-      childrens.push(this.completeHalfGenomeFromGenome(genomeXYFirstHalf, genomeXX));
-      childrens.push(this.completeHalfGenomeFromGenome(genomeXYSecondHalf, genomeXX));
-      childrens.push(this.completeHalfGenomeFromGenome(genomeXXFirstHalf, genomeXY));
-      childrens.push(this.completeHalfGenomeFromGenome(genomeXXSecondHalf, genomeXY));
+      childrens.push(this.completeHalfChromosomeFromChromosome(ChromosomeXYFirstHalf, ChromosomeXX));
+      childrens.push(this.completeHalfChromosomeFromChromosome(ChromosomeXYSecondHalf, ChromosomeXX));
+      childrens.push(this.completeHalfChromosomeFromChromosome(ChromosomeXXFirstHalf, ChromosomeXY));
+      childrens.push(this.completeHalfChromosomeFromChromosome(ChromosomeXXSecondHalf, ChromosomeXY));
       return childrens;
   }
-  completeHalfGenomeFromGenome(halfGenome: City[], genome: City[]): City[] {
-      let newGenome = [];
-      newGenome = newGenome.concat(halfGenome);
-      genome.forEach((gene) => {
-          let index = newGenome.findIndex(c => c.name == gene.name);
-          if (newGenome.length < genome.length && index < 0) {
-              newGenome.push(gene);
+  completeHalfChromosomeFromChromosome(halfChromosome: City[], Chromosome: City[]): City[] {
+      let newChromosome = [];
+      newChromosome = newChromosome.concat(halfChromosome);
+      Chromosome.forEach((gene) => {
+          let index = newChromosome.findIndex(c => c.name == gene.name);
+          if (newChromosome.length < Chromosome.length && index < 0) {
+              newChromosome.push(gene);
           }
       });
-      return newGenome;
+      return newChromosome;
   }
   //#endregion
 
   //#region mutation
-  doMutation(genome: City[]): City[] {
+  doMutation(Chromosome: City[]): City[] {
       //mutation will be on top two cities
       let longestRoadCityAIndex = 0;
       let longestRoadCityBIndex = 0;
@@ -289,9 +289,9 @@ export class ShortestPathComponent implements OnInit {
       let secondLongestRoad = 0;
 
 
-      for (let i = 0; i < genome.length; i++) {
-          if (i < genome.length - 1) {
-              let roadDistance = this.getDistance(genome[i], genome[i + 1]);
+      for (let i = 0; i < Chromosome.length; i++) {
+          if (i < Chromosome.length - 1) {
+              let roadDistance = this.getDistance(Chromosome[i], Chromosome[i + 1]);
               if (roadDistance > longestRoad) {
                   secondLongestRoad = longestRoad;
                   secondLongestRoadCityAIndex = longestRoadCityAIndex;
@@ -303,14 +303,14 @@ export class ShortestPathComponent implements OnInit {
           }
       }
       //swap
-      let temp = genome[longestRoadCityAIndex];
-      genome[longestRoadCityAIndex] = genome[secondLongestRoadCityAIndex];
-      genome[secondLongestRoadCityAIndex] = temp;
+      let temp = Chromosome[longestRoadCityAIndex];
+      Chromosome[longestRoadCityAIndex] = Chromosome[secondLongestRoadCityAIndex];
+      Chromosome[secondLongestRoadCityAIndex] = temp;
 
-      return genome;
+      return Chromosome;
   }
-  doMutationNew(genome: City[], pM: number): City[] {
-      const mutatedRoute = genome.slice();
+  doMutationNew(Chromosome: City[], pM: number): City[] {
+      const mutatedRoute = Chromosome.slice();
       for (let index in mutatedRoute) {
           if (pM > Math.random()) {
               const randInd = Math.floor(Math.random() * mutatedRoute.length);
@@ -342,10 +342,10 @@ export class ShortestPathComponent implements OnInit {
       let citiesMap: City[] = this.citiesMap.slice();
       let generationCount = 0;
       let population = this.generatePopulation(citiesMap);
-      let fittestGenome = this.getFittestGenome(population);
-      let bestGenome: City[] = fittestGenome;
-      let bestGenomeScore: number = 0;
-      while (this.getGenomeScore(fittestGenome) < 1 && !this.stop) {
+      let fittestChromosome = this.getFittestChromosome(population);
+      let bestChromosome: City[] = fittestChromosome;
+      let bestChromosomeScore: number = 0;
+      while (this.getChromosomeScore(fittestChromosome) < 1 && !this.stop) {
           generationCount++;
           let nextGeneration = this.selectBestN(population, population.length / 2, 10);
           nextGeneration = this.doCrossOver(nextGeneration);
@@ -354,22 +354,21 @@ export class ShortestPathComponent implements OnInit {
               nextGeneration[i] = this.doMutationNew(nextGeneration[i], 5);
           }
           population = nextGeneration;
-          fittestGenome = this.getFittestGenome(population);
-          let fittestGenomeScore = this.getGenomeScore(fittestGenome);
-          if (bestGenomeScore < fittestGenomeScore) {
-              bestGenome = fittestGenome;
-              bestGenomeScore = fittestGenomeScore;
+          fittestChromosome = this.getFittestChromosome(population);
+          let fittestChromosomeScore = this.getChromosomeScore(fittestChromosome);
+          if (bestChromosomeScore < fittestChromosomeScore) {
+              bestChromosome = fittestChromosome;
+              bestChromosomeScore = fittestChromosomeScore;
           }
-          let genomeString = fittestGenome.map(x => x.name).join();
-          let bestGenomeString = bestGenome.map(x => x.name).join();
+          let ChromosomeString = fittestChromosome.map(x => x.name).join();
+          let bestChromosomeString = bestChromosome.map(x => x.name).join();
           console.log(`---------------------------------------------------------`);
-          console.log(`Generation:${generationCount},Best Solution: ${bestGenomeString}, Best Score: ${bestGenomeScore},  Solution: [${genomeString}], Score: ${fittestGenomeScore}`);
+          console.log(`Generation:${generationCount},Best Solution: ${bestChromosomeString}, Best Score: ${bestChromosomeScore},  Solution: [${ChromosomeString}], Score: ${fittestChromosomeScore}`);
           console.log(`---------------------------------------------------------`);
-          setTimeout(() => {    //<<<---    using ()=> syntax
-          }, 50);
-
+        //   setTimeout(() => {    //<<<---    using ()=> syntax
+        //   }, 50);
       }
-      fittestGenome;
+      fittestChromosome;
   }
 
 }
