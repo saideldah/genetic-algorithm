@@ -5,12 +5,14 @@ import { AppComponent } from './app.component';
 import { ShortestPathComponent } from './shortest-path/shortest-path.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ColorBoardComponent } from './color-board/color-board.component';
+import { TimeTableComponent } from './time-table/time-table.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ShortestPathComponent,
-    ColorBoardComponent
+    ColorBoardComponent,
+    TimeTableComponent
   ],
   imports: [
     BrowserModule,
