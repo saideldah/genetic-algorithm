@@ -16,6 +16,7 @@ export class ShortestPathComponent implements OnInit {
   pathDistance: number;
   populationSize = 100;
   stop = true;
+
   constructor() {
       this.width = 400;
       this.height = 400;
@@ -82,6 +83,7 @@ export class ShortestPathComponent implements OnInit {
       this.pathDistance = this.getPathDistance(this.citiesMap);
       this.path = this.citiesMap.map(c => c.name);
   }
+
   drawCities(cities: City[]): void {
       cities.forEach((city) => {
           this.context.strokeText(city.name, city.x, city.y);
@@ -116,6 +118,7 @@ export class ShortestPathComponent implements OnInit {
       this.context.clearRect(0, 0, this.width, this.height);
       this.drawCities(this.citiesMap);
   }
+
   getRandomNumber(maxNumber) {
       let index = Math.floor((Math.random() * maxNumber));
       return index;
@@ -218,21 +221,21 @@ export class ShortestPathComponent implements OnInit {
   //#endregion
 
   //#region crossover
-  doCrossOver(fittestGenoms: City[][]): City[][] {
+  doCrossOver(fittestChromosomes: City[][]): City[][] {
       let newPopulation: City[][] = [];
-      for (let i = 0; i < fittestGenoms.length; i += 2) {
+      for (let i = 0; i < fittestChromosomes.length; i += 2) {
           let childrens = [];
-          if (fittestGenoms[i + 2]) {
-              childrens = this.makeChildren(fittestGenoms[i], fittestGenoms[i + 1], true);
+          if (fittestChromosomes[i + 2]) {
+              childrens = this.makeChildren(fittestChromosomes[i], fittestChromosomes[i + 1], true);
           } else {
-              childrens = this.makeChildren(fittestGenoms[i], fittestGenoms[i - 1]);
+              childrens = this.makeChildren(fittestChromosomes[i], fittestChromosomes[i - 1]);
           }
           newPopulation = newPopulation.concat(childrens);
-          if ((newPopulation.length + fittestGenoms.length) >= this.populationSize) {
+          if ((newPopulation.length + fittestChromosomes.length) >= this.populationSize) {
               break;
           }
       }
-      return newPopulation.concat(fittestGenoms);
+      return newPopulation.concat(fittestChromosomes);
   }
 
   // need inhancment
@@ -336,7 +339,7 @@ export class ShortestPathComponent implements OnInit {
        * 7- go to step 2
        * When To Stop:
        * a- after set number of generation
-       * b- stop when the most fit solution has not changed i a certain number of generations
+       * b- stop when the most fit solution has not changed in a certain number of generations
        */
       this.stop = false;
       let citiesMap: City[] = this.citiesMap.slice();
