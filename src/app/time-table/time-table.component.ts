@@ -30,27 +30,27 @@ export class TimeTableComponent implements OnInit {
       {
         name: 'A',
         numberOfSessions: 30,
-        numberConsumedSessions: 0
+        numberOfConsumedSessions: 0
       }
       , {
         name: 'B',
         numberOfSessions: 30,
-        numberConsumedSessions: 0
+        numberOfConsumedSessions: 0
       }
       , {
         name: 'C',
         numberOfSessions: 30,
-        numberConsumedSessions: 0
+        numberOfConsumedSessions: 0
       }
       , {
         name: 'D',
         numberOfSessions: 30,
-        numberConsumedSessions: 0
+        numberOfConsumedSessions: 0
       }
       , {
         name: 'E',
         numberOfSessions: 30,
-        numberConsumedSessions: 0
+        numberOfConsumedSessions: 0
       }
     ];
 
@@ -104,12 +104,12 @@ export class TimeTableComponent implements OnInit {
         let instructor = new Instructor();
         instructors = this.shuffleInstructors(instructors);
         let randomIndex = this.getRandomNumber(6);
-        while (instructors[randomIndex].numberConsumedSessions == instructors[randomIndex].numberOfSessions) {
+        while (instructors[randomIndex].numberOfConsumedSessions == instructors[randomIndex].numberOfSessions) {
           instructors = this.shuffleInstructors(instructors);
           randomIndex = this.getRandomNumber(6);
         }
         instructor.name = instructors[randomIndex].name;
-        instructors[randomIndex].numberConsumedSessions++;
+        instructors[randomIndex].numberOfConsumedSessions++;
       }
     }
     return gene;
@@ -124,10 +124,15 @@ export class TimeTableComponent implements OnInit {
     }
     return chromosome;
   }
-
+  resetInstructors() {
+    this.instructors.forEach(instructor => {
+      instructor.numberOfConsumedSessions = 0;
+    });
+  }
   generatePopulation(): Chromosome[] {
     let population: Chromosome[] = [];
     for (let i = 0; i < this.populationSize; i++) {
+      this.resetInstructors();
       population.push(this.generateChromosome());
     }
     return population;
@@ -223,7 +228,7 @@ export class TimeTableComponent implements OnInit {
 class Instructor {
   name: string;
   numberOfSessions: number;
-  numberConsumedSessions: number;
+  numberOfConsumedSessions: number = 0;
 }
 // is the schedule
 class Gene {
