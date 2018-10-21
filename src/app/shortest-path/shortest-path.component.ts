@@ -89,8 +89,8 @@ export class ShortestPathComponent implements OnInit {
           this.context.strokeText(city.name, city.x, city.y);
       });
   }
-  drawRoad(cirtyA: City, cityB: City): void {
-      this.context.moveTo(cirtyA.x, cirtyA.y);
+  drawRoad(cityA: City, cityB: City): void {
+      this.context.moveTo(cityA.x, cityA.y);
       this.context.lineTo(cityB.x, cityB.y);
       this.context.stroke();
   }
@@ -101,18 +101,18 @@ export class ShortestPathComponent implements OnInit {
           this.drawRoad(cityA, cityB);
       }
   }
-  getDistance(cirtyA: City, cityB: City): number {
+  getDistance(cityA: City, cityB: City): number {
       // Distance = sqrt( (x2-x1)^2 + (y2-y1)^2 )
-      return Math.round(Math.sqrt(Math.pow((cityB.x - cirtyA.x), 2) + Math.pow((cityB.y - cirtyA.y), 2)));
+      return Math.round(Math.sqrt(Math.pow((cityB.x - cityA.x), 2) + Math.pow((cityB.y - cityA.y), 2)));
   }
   getPathDistance(path: City[]): number {
-      let ditance = 0;
+      let distance = 0;
       for (let index = 1; index < path.length; index++) {
           const cityA = path[index - 1];
           const cityB = path[index];
           ditance += this.getDistance(cityA, cityB);
       }
-      return ditance;
+      return distance;
   }
   clear() {
       this.context.clearRect(0, 0, this.width, this.height);
@@ -120,8 +120,8 @@ export class ShortestPathComponent implements OnInit {
   }
 
   getRandomNumber(maxNumber) {
-      let index = Math.floor((Math.random() * maxNumber));
-      return index;
+      let randomNumber = Math.floor((Math.random() * maxNumber));
+      return randomNumber;
   }
   //#region set up population
   /**
@@ -145,16 +145,6 @@ export class ShortestPathComponent implements OnInit {
       }
 
       return citiesMaps;
-
-      // const Chromosome = [];
-      // let index = 0;
-      // for (let i = 0; i < citiesMaps.length; i++) {
-      //     do {
-      //         index = this.getRandomNumber(citiesMaps.length - 1);
-      //     } while (Chromosome.findIndex(x => x.name === citiesMaps[index].name) >= 0);
-      //     Chromosome.push(citiesMaps[index]);
-      // }
-      // return Chromosome;
   }
   /**
    * generate new Popluation
@@ -238,18 +228,18 @@ export class ShortestPathComponent implements OnInit {
       return newPopulation.concat(fittestChromosomes);
   }
 
-  // need inhancment
+  // need enhancement
   makeChildren(ChromosomeXY: City[], ChromosomeXX: City[], makeTwo = false): City[][] {
       let childrens = this.mateChromosomes(ChromosomeXY, ChromosomeXX);
       let selectedChildrens = [];
       let firstIndex = this.getRandomNumber(this.citiesMap.length - 1);
       selectedChildrens.push(childrens[firstIndex]);
       if (makeTwo) {
-          let seconIndex = 0;
+          let secondIndex = 0;
           do {
-              seconIndex = this.getRandomNumber(this.citiesMap.length - 1);
-          } while (firstIndex == seconIndex);
-          selectedChildrens.push(childrens[seconIndex]);
+              secondIndex = this.getRandomNumber(this.citiesMap.length - 1);
+          } while (firstIndex == secondIndex);
+          selectedChildrens.push(childrens[secondIndex]);
       }
       return childrens;
   }
